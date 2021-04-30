@@ -1,0 +1,251 @@
+{
+	"LOAD_DATA_PARAMS" : 
+	{
+		"DEFAULT_DATA_ROOT" : "/Volumes/_/DATA/MANOMETRY_IN/WORKING/",
+		"DEFAULT_OUTPUT_ROOT" : "/Volumes/_/OUT/MANOMETRY_OUT/",
+
+		"FILENAME_IDS_MATCHING" : {
+			"ID_SEPARATOR_CHAR" : "_",
+			"IDS_POSITION" : {
+				"SUBJECT" : 0,
+				"RECORDING" : 1,
+				"CONDITION" : null
+			} 
+		},
+
+		"OVERARCHING_FILE_SELECTION" : {
+			"WITH_THESE_SUBJECT_IDS" : ["AM"],
+			"WITH_THESE_RECORDING_IDS" : ["*"],
+			"WITH_PREFACES" : ["*"],
+			"WITH_SUFFICES" : ["*"],	
+			"WITH_EXTENSIONS" : ["*"],	
+			"CONTAINING_STRINGS" : ["*"],
+			"IN_THESE_SUB_FOLDERS" : null,
+			"EXCLUDING_THESE_SUBJECT_IDS" : [""],
+			"EXCLUDING_THESE_SUB_FOLDERS" : ["EXCLUDE", "NeuralNets", "NEURALNETS"]		  	
+		},
+
+		"DATA" :
+		{
+			"Samples" : {
+				"LOAD" : true,
+				"IS_MAIN_DATA_CLASS" : true,
+				"DATA_ROOT" : "",
+				"LOAD_PROCESSED_LEVEL" : "RAW",
+				"SUB_FOLDERS_SPECIFY" : "CONDITIONS",
+				"PHYSIOLOGICAL_SOURCE" : "COLON",
+				"CONTAINING_STRINGS" : ["Samples"],
+				"EXTENSIONS" : {
+					"INPUT" : [ "MAT","CSV","TXT" ],
+					"OUTPUT" : "CSV"
+				},
+				"UNITS"	: "cd/m2"
+			},	
+
+			"NeuralNets" : {
+				"LOAD" : false,
+				"DATA_ROOT" : "",
+				"CONTAINING_STRINGS" : ["NeuralNets"],
+				"EXTENSIONS" : {
+					"INPUT" : ["MAT","CSV","TXT"],
+					"OUTPUT" : "MAT"
+				}
+			 },		
+
+			"Timestamps" : {
+				"LOAD" : false,
+				"DATA_ROOT" : "", 
+				"DATA_TYPE" : "CONFIGURATION",
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["Timestamps"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : {
+					"INPUT" : ["BIN", "CSV", "TXT"],
+					"OUTPUT" : "CSV"
+				}
+			},
+
+			"ChanConfig" : {
+				"LOAD" : false,
+				"DATA_ROOT" : "", 
+				"DATA_TYPE" : "CONFIGURATION",
+				"PROCESSED_LEVEL" : "DEVICE", 
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["ChanConfig"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : {
+					"INPUT" : ["JSON"],
+					"OUTPUT" : "JSON"
+				},
+				"DEFAULT_CConfig" : {
+					"SAMPLE_RATE" : 10,		
+					"CHANNEL_GRID" : [],
+					"CHANNEL_ORDER" : [],
+					"ROTATE_GRID_IN_DEGREES" : 0,
+					"CHANNEL_SPACING_MM" : 100,
+					"NUM_CHANS" : 74,
+					"TIME_START" : 0,
+					"TIME_END" : null
+				  }
+			},
+
+			"Windows" : {
+				"LOAD" : true,
+				"DATA_ROOT" : "",
+				"CONTAINING_STRINGS" : [ "Windows" ],
+				"EXTENSIONS" : {
+					"INPUT" : [ "MAT","CSV","TXT" ],
+					"OUTPUT" : "MAT"
+				},
+				"EVENT_TYPE_MATCHING_BY_FILENAME" : {
+					"EVENT_TYPE_PREFACE" : "Windows",
+					"EVENT_TYPE_SUFFIX" : "."
+				},
+				"EVENT_HIERARCHY_COMES_FROM_DIR_STRUCTURE" : false
+			},
+
+			"EvntWnMaps" : {
+				"LOAD" : true,
+				"DATA_ROOT" : "",
+				"CONTAINING_STRINGS" : [ "EvntWnMaps" ],
+				"EXTENSIONS" : {
+					"INPUT" : [ "MAT","CSV","TXT" ],
+					"OUTPUT" : "MAT"
+				},
+				"EVENT_TYPE_MATCHING_BY_FILENAME" : {
+					"EVENT_TYPE_PREFACE" : "EvntWnMaps",
+					"EVENT_TYPE_SUFFIX" : "."
+				},
+				"EVENT_HIERARCHY_COMES_FROM_DIR_STRUCTURE" : false
+
+			},	
+			"Events" : {
+				"LOAD" : true,
+				"DATA_ROOT" : "",
+				"PROCESSED_LEVEL" : "MANUALLY",
+				"INVERT_CHANS" : false,
+				"SUBTRACT_ONE_FROM_CHAN_NUM" : false,
+				"PER_DATASET_COMPANION_FILE" : true,
+				"CONTAINING_STRINGS" : [ "EVENTS" ],						
+				"EXTENSIONS" : {
+					"INPUT" : ["CSV", "SEQ"],
+					"OUTPUT" : "CSV"
+				},
+
+				"EVENT_HIERARCHY_COMES_FROM_DIR_STRUCTURE" : false,
+
+				"EVENT_TYPE_MATCHING_BY_FILENAME" : {
+					"EVENT_TYPE_PREFACE" : "EVENTS",
+					"EVENT_TYPE_SUFFIX" : "."
+				},	
+
+				"LEVELS_TYPE" : ["*ANALYSIS", "EVENT_TYPE", "EVENT_DIRECTION", "*UNIT"],
+				"LEVEL_SPECIFYING_STRINGS" : [
+					["winByLabel","Detect","Predict", "Peaks", "Nearest","OnIncline","OnDecline", "ThresholdIntercepts", "FindPeaksWithin", "*Manual","handMarked"] ,
+					["Haps", "Cyclic", "NonHaps", "NonCyclic"] ,
+					["Antegrade", "Retrograde"] ,
+					["PeakIndex", "StartIndex", "EndIndex", "MidIndex", "GroupIndex", "InterpIndex", "InterceptsIndex", "MissedIndex", "AllIndex", "CorrectIndex", "SimilarAmpIndex", "GroupedIndex", "ThresholdIndex" ]
+				],
+				"IS_OUTPUT_DATA" : true						
+			},				
+
+			"ProcessInfo" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["ProcessInfo"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "JSON",
+					"OUTPUT" : "JSON"
+				},
+				"IS_OUTPUT_DATA" : true		
+			},
+			
+			"SamplesStatsPerChan" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["SamplesStatsPerChan"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "CSV",
+					"OUTPUT" : "CSV"
+				},
+				"HAS_HEADERS" : false,				
+
+				"IS_OUTPUT_DATA" : true		
+			},	
+			"SamplesStatsAllChans" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["SamplesStatsAllChans"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "CSV",
+					"OUTPUT" : "CSV"
+				},
+				"HAS_HEADERS" : true,								
+				"IS_OUTPUT_DATA" : true		
+			},	
+			"nnPredictions" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"CONTAINING_STRINGS" : ["nnPredictions"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"HAS_HEADERS" : true,				
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "CSV",
+					"OUTPUT" : "CSV"
+				},
+				"IS_OUTPUT_DATA" : true				
+			},
+			"TFevaluation" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"CONTAINING_STRINGS" : ["TFevaluation"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "CSV",
+					"OUTPUT" : "CSV"
+				},
+				"HAS_HEADERS" : true,
+				"IS_OUTPUT_DATA" : true
+			},
+			"cvEvaluation" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["cvEvaluation"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "CSV",
+					"OUTPUT" : "CSV"
+				},
+				"HAS_HEADERS" : true,
+				"IS_OUTPUT_DATA" : true
+			},
+			"cvAvg" : {
+				"LOAD" : false,
+				"DATA_ROOT" : null,		
+				"FILENAME" : "",  
+				"CONTAINING_STRINGS" : ["cvAvg"],
+				"PER_DATASET_COMPANION_FILE" : true,
+				"EXTENSIONS" : 
+				{
+					"INPUT" : "CSV",
+					"OUTPUT" : "CSV"
+				},
+				"HAS_HEADERS" : true,
+				"IS_OUTPUT_DATA" : true
+			}			
+		}
+	}
+}

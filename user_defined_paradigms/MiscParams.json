@@ -1,0 +1,13 @@
+{
+	"MISC_PARAMS" :
+	{
+		"CONVERT_PARAMS_FROM_TO" : {
+
+			"MaxSample" : "PeakIndex",
+			"StartSample" : "StartIndex",
+			"EndSample" : "EndIndex"
+
+		},
+		"SUPPRESS_COMMAND_OUTPUT" : true
+	}
+}

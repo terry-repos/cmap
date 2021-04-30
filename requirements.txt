@@ -1,0 +1,6 @@
+pathlib
+numpy
+scipy
+matplotlib
+scikit-image
+pylab

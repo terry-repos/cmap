@@ -1,0 +1,666 @@
+{
+	"PIPELINE_STEPS" : [
+		{
+			"LOAD_DATA" : {
+				"PERFORM_THIS_STEP" : true,
+
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : false
+				},
+				"PLOT_CHANS" : {
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"PLOT_EVENTS" : true,
+						"ONLY_PLOT_WINDOWS_WITH_EVENTS" : false
+					}							
+				},
+				"PARAMS_FILE" : "DataParams.json"
+			}
+		},		
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "REMOVE_BAD_CHANS",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false
+				},				
+				"PARAMS" : {
+					"PER_CHANNEL" : false,				
+					"BAD_CHAN_DETECTION_METHOD" : "KURTOSIS",
+					"LESS_THAN_THRESHOLD" : 0,
+					"GREATER_THAN_THRESHOLD" : 10000
+				}
+			}
+		},					
+		{	
+			"SUBSET_SAMPLES" : {
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "DELETE_CHANNEL_RANGE",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"PLOT_EVENTS" : false
+					}					
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},
+				"PARAMS" : {
+					"PER_CHANNEL" : false,
+					"RANGES" : [[0, 2]],
+					"ALSO_SUBSET_EVENTS" : true
+				}
+			}
+		},	
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "REMOVE_BASELINE",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : false
+				},
+				"PARAMS" : {
+					"PER_CHANNEL" : true,
+					"SUB_METHOD" : "DETREND"
+				}
+			}
+		},		
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "REMOVE_BASELINE_SLIDING",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"PLOT_EVENTS" : false,
+						"ONLY_PLOT_WINDOWS_WITH_EVENTS" : false	
+					}					
+				},
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : false
+				},
+				"PARAMS" : {
+					"PER_CHANNEL" : true,
+					"SUB_METHOD" : "ENVELOP_SECANT",
+					"WINDOW_SIZE" : 150
+				}
+			}
+		},				
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "REMOVE_SYNC_NOISE",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"PLOT_EVENTS" : false
+					}								
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},						
+				"PARAMS" : {
+					"PER_CHANNEL" : false,
+					"SUB_METHOD" : "MEDIAN"
+				}
+			}
+		},		
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "TEMPORAL_FILTER",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : false
+				},							
+				"PARAMS" : {
+					"PER_CHANNEL" : true,
+					"SUB_METHOD" : "SAVITZKY_GOLAY",
+					"P_ORDER" : 3,
+					"WINDOW_SIZE" : 10				
+
+				}
+			}
+		},	
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "SPATIAL_FILTER",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false
+				},			
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},							
+				"PARAMS" : {
+					"PER_CHANNEL" : false,
+					"SUB_METHOD" : "WIENER",
+					"WINDOW_SIZE" : [4, 15]					
+
+				}
+			}
+		},				
+		{
+			"CLEAN_SAMPLES" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "NORMALISE",
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false
+				},			
+				"PARAMS" : {
+					"PER_CHANNEL" : false,
+					"SUB_METHOD" : "DIVISIVE"
+				}
+			}
+		},					
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "OUTSIDE_THRESHOLD",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true
+				},				
+				"PARAMS" : {		
+					"SUB_METHOD" : "OUTLIER_PERCENTILE",
+					"VALUE" : 25,
+					"DIRECTION" : ["UPPER"]
+				}
+			}
+		},	
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : true,
+				"METHODS" : "THRESHOLD_INTERCEPTS",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false	
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : true,					
+					"SUB_METHOD" : "OUTLIER_PERCENTILE",
+					"VALUE" : 25,
+					"REFRACTORY_PERIOD" : 4
+				}
+			}
+		},
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : true,
+				"METHODS" : "START_END_INTERCEPTS",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false	
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : true,		
+					"ISOLATION_METHOD" : "MAX_OF_GROUP",
+					"WINDOW_OVERLAP" : 10,
+					"LENGTH_OF_SLOPE" : 8,
+					"EVENTS_FROM_THIS_HIERARCHY" : ["Detect", "ThresholdIntercepts", "OutlierPercentile50mingap4", "InterceptsIndex"]
+				}
+			}
+		},		
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "START_END_PAIRS",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false					
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : true,					
+					"MIN_WAVE_WIDTH" : 5,
+					"MAX_WAVE_WIDTH" : 185,						
+					"ISOLATION_METHOD" : "MAX_WIDTH",
+					"MID_POINT_NEED_BE_GREATER_THAN" : false,												
+					"START_EVENTS_HIERARCHY" : ["Detect", "StartEndIntercepts", "slopeLen8vinOverlap10", "StartIndex"],
+					"END_EVENTS_HIERARCHY" : ["Detect", "StartEndIntercepts", "slopeLen8vinOverlap10", "EndIndex"]
+				}
+			}
+		},
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "MID_POINT",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false	
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},		
+				"PARAMS" : {		
+					"PER_CHANNEL" : true,					
+					"INCLUDE_START_END_PAIRS_IN_PLOTS" : false,
+					"MID_POINT_NEED_BE_GREATER_THAN" : false,						
+					"START_EVENTS_HIERARCHY" : ["Detect", "StartEndPairs", "wavWidth5-185MaxWidth", "StartIndex"],
+					"END_EVENTS_HIERARCHY" : ["Detect", "StartEndPairs", "wavWidth5-185MaxWidth", "EndIndex"]
+				}
+			}
+		},
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "MATCH_SINGULAR_EVENTS",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : false,					
+					"EVENTS_UNDER_SCRUTINY" : ["Detect", "MidPoint", "PeakIndex"],
+					"REFERENCE_EVENTS_HIERARCHIES" : [ "Manual", "Cyclic", "Retrograde", "PeakIndex" ],
+					"MAX_DISTANCE_FROM_REFERENCE_EVENT" : 75	
+				}
+			}
+		},	
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "GROUP_PROPAGATING",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false
+				},			
+				"PARAMS" : 
+				{		
+					"PER_CHANNEL" : false,
+					"SUB_METHOD" : "NEAREST",
+					"GET_START_END_INDICES" : true,
+					"MAX_DELAY_TO_NEIGHBOUR" : 380,
+					"MIN_DELAY_TO_CONCLUDE_DIRECTIONALITY" : 40,
+					"CONSISTENT_DIRECTION" : false,
+					"MAX_NEIGHBOUR_SPAN" : 15,
+					"MIN_INDICES_TO_FORM_GROUP" : 2,
+					"EVENTS_FROM_THIS_HIERARCHY" : [ "Detect", "MidPoint", "PeakIndex" ]
+				}
+			}
+		},
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "GROUP_PROPAGATING",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},				
+				"PARAMS" : 
+				{		
+					"PER_CHANNEL" : false,
+					"SUB_METHOD" : "INTERPOLATE",
+					"EVENTS_FROM_THIS_HIERARCHY" : [ "Detect", "GroupPropagating", "Agnostic", "GroupIndex" ]
+				}
+			}
+		},			
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "MATCH_SINGULAR_EVENTS",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : false,					
+					"EVENTS_UNDER_SCRUTINY" : ["Detect", "GroupPropagating", "maxGap200nghbSpan10minChans2", "Agnostic", "GroupIndex"],
+					"REFERENCE_EVENTS_HIERARCHIES" : [ "Manual", "Cyclic", "Retrograde", "PeakIndex" ],
+					"MAX_DISTANCE_FROM_REFERENCE_EVENT" : 75
+				}
+			}
+		},			
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "GROUP_PROPAGATING",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},				
+				"PARAMS" : 
+				{		
+					"PER_CHANNEL" : false,
+					"SUB_METHOD" : "GET_DIRECTION",
+					"EVENTS_FROM_THIS_HIERARCHY" : [ "Detect", "GroupPropagating", "Agnostic", "GroupIndex" ]
+				}
+			}
+		},	
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "MATCH_SINGULAR_EVENTS",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : false,					
+					"EVENTS_UNDER_SCRUTINY" : ["Detect", "GroupPropagating", "Retrograde", "maxGap200nghbSpan5minChans3", "GroupIndex"],
+					"REFERENCE_EVENTS_HIERARCHIES" : [ "Manual", "Cyclic", "Retrograde", "PeakIndex" ],
+					"MAX_DISTANCE_FROM_REFERENCE_EVENT" : 75		
+				}
+			}
+		},										
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "MIDDLE_OF_WAVES",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true	
+				},				
+				"PARAMS" : {		
+					"SUB_METHOD" : "OUTLIER_PERCENTILE",
+					"OUTLIER_PERCENTILE" : 4,
+					"REFRACTORY_PERIOD" : 10,
+					"LENGTH_OF_SLOPE" : 10,		
+					"MAX_WAVE_WIDTH" : 250,
+					"MIN_WAVE_WIDTH" : 100,
+					"GROUP_OVERLAP" : 280,
+					"OUTPUT_EVENTS_HIERARCHY" : [ "PeakIndex" ] 
+				}
+			}
+		},			
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "GROUP_PROPAGATING",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+						]
+					}	
+				},
+				"PARAMS" : {		
+					"PER_CHANNEL" : false,
+					"MIN_DELAY" : 5,
+					"MAX_DELAY" : 30,	
+					"NEIGHBOUR_SPAN" : 5,
+					"MIN_CHANS_TO_FORM_SUB_GROUP" : 3,
+					"MIN_CHANS_TO_FORM_GROUP" : 4,					
+					"EVENTS_FROM_THIS_HIERARCHY" : [  "Detect", "MiddleOfWaves", "PeakIndex" ],					
+					"OUTPUT_EVENTS_HIERARCHY" : [ ] 
+				}
+			}
+		},			
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "WITHIN_AMPLITUDE",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[ [ "Detect", "MiddleOfWaves", "PeakIndex" ]],
+							[ [ "Detect", "WithinAmplitude", "SimilarAmpIndex" ] ]
+						]
+					}	
+				},				
+				"PARAMS" : {		
+					"PER_CHANNEL" : false,					
+					"SUB_METHOD" : "OUTLIER_PERCENTILE",
+					"OUTLIER_PERCENTILE" : 50,
+					"KEEP_THESE_EVENTS_HIERARCHY" : [ "Detect", "MiddleOfWaves", "PeakIndex" ],
+					"OUTPUT_EVENTS_HIERARCHY" : [ "SimilarAmpIndex" ]			
+				}
+			}
+		},			
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "NEAREST",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[ [ "Detect", "Nearest", "MidPeakIndex" ] ]
+						]
+					}	
+				},				
+				"PARAMS" : {
+					"MAX_DISTANCE_FROM_REFERENCE_EVENT" : 10,
+					"KEEP_THESE_EVENTS_HIERARCHY" : [ "Detect", "MiddleOfWaves", "PeakIndex" ],
+					"NEAREST_THESE_EVENTS_HIERACHY" : [ "Detect", "PeaksAboveThreshold", "PeakIndex" ],	
+					"OUTPUT_EVENTS_HIERARCHY" : [ "MidPeakIndex" ] 
+				}
+			}
+		},				
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "NEAREST",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[ [ "Manual", "Pressure", "Haps","Antegrade", "PeakIndex" ] ],
+							[ [ "Detect", "Nearest", "Haps", "PeakIndex" ] ]
+						]
+					}	
+				},				
+				"PARAMS" : {
+					"MAX_DISTANCE_FROM_REFERENCE_EVENT" : 240,
+					"KEEP_THESE_EVENTS_HIERARCHY" : [ "Detect", "MiddleOfWaves", "PeakIndex" ],
+					"NEAREST_THESE_EVENTS_HIERACHY" : [ "Manual", "Pressure", "Haps", "Antegrade", "PeakIndex" ],	
+					"OUTPUT_EVENTS_HIERARCHY" : [ "Haps", "PeakIndex" ] 
+				}
+			}
+		},		
+		{
+			"DETECT" :
+			{
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "AWAY_FROM",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[ [ "Manual", "Pressure", "Haps","Antegrade", "PeakIndex" ] ],						
+							[ [ "Detect", "Nearest", "Haps", "PeakIndex" ] ],
+							[ [ "Detect", "AwayFrom", "NonHaps", "PeakIndex" ] ]	
+						]
+					},
+					"SAMPLES_SUBSETS" : [["02H30M00", "03H00M00"], ["04H30M00", "05H00M00"]]
+
+				},	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},
+				"PARAMS" : {
+					"MIN_DIST_FROM_EXCLUSIONARY_EVENT" : 480,
+					"NUM_OF_NEIGHBOURING_CHANS_EITHER_SIDE" : 72,
+
+					"EVENTS_FROM_THIS_HIERARCHY" : [  "Detect", "MiddleOfWaves", "PeakIndex" ],
+					"EVENTS_EXCL_THIS_HIERARCHY" : [  "Detect", "Nearest", "Haps", "PeakIndex" ],
+					"OUTPUT_EVENTS_HIERARCHY" : [ "NonHaps", "PeakIndex" ] 
+				}
+			}
+		},	
+		{	
+			"OPERATE_NN" : {
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "TRAIN_AND_TEST",	
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},
+				"PLOT_CHANS" : {	
+					"PERFORM_PLOT_CHANS" : false,
+					"PERFORM_PLOT_WINDOWS" : false,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[ [ "Manual", "Pressure", "Haps","Antegrade", "PeakIndex" ] ],
+							[ [ "Detect", "Nearest", "Haps", "PeakIndex" ] ],
+							[ [ "Detect", "AwayFrom", "NonHaps", "PeakIndex" ] ]								
+						]
+					},
+					"SAMPLES_SUBSETS" : [["02H30M00", "03H00M00"], ["04H30M00", "05H00M00"]]
+				},	
+				"PARAMS" : {
+					"TYPE_OF_NET" : "DNN",
+					"USE_OFFLINE_WINS" : false,
+					"NUM_CROSS_VALIDATION_FOLDS" : 2,
+					"WINDOWS" : [[-180, 180]],
+					"NUM_OF_NEIGHBOURING_CHANS_EITHER_SIDE" : [0,1,2,3,4,5],
+					"NUM_TRAINING_STEPS" : [2000],
+					"HIDDEN_UNITS" : [ [10] ],
+					"LABEL_HIERARCHIES" : [ [ "Detect", "AwayFrom", "NonHaps", "PeakIndex" ], [ "Detect", "Nearest", "Haps", "PeakIndex" ] ]
+				}
+			}
+		},
+		{	
+			"SUBSET_SAMPLES" : {
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "DELETE_TIMESTAMP_RANGE",
+				"PLOT_CHANS" : {		
+					"PERFORM_PLOT_CHANS" : true,
+					"EVENT_MARKER_PARAMS" : {
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[ [ "Manual", "Pressure", "Haps","Antegrade", "PeakIndex" ] ],
+							[ [ "Detect", "Nearest", "Haps", "PeakIndex" ] ],
+							[ [ "Detect", "AwayFrom", "NonHaps", "PeakIndex" ] ]							
+						]
+					}	
+				},		
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : false
+				},
+				"PARAMS" : {
+					"PER_CHANNEL" : false,
+					"RANGES" : [ ["00H00M00", "02H30M00"], ["03H00M00", "04H30M00"], ["05H00M00", null] ],
+					"ALSO_SUBSET_EVENTS" : true
+				}
+			}
+		},	
+		{	
+			"OPERATE_NN" : {
+				"PERFORM_THIS_STEP" : false,
+				"METHODS" : "PREDICT",			
+				"SAVE_DATA" : {
+					"PERFORM_SAVE_DATA" : true
+				},
+				"PLOT_CHANS" : {	
+
+					"PERFORM_PLOT_CHANS" : true,
+
+					"EVENT_MARKER_PARAMS" : {
+						"PLOT_EVENTS" : true,						
+						"EVENT_HIERARCHIES_TO_PLOT" : [
+							[[ "Detect", "AboveThreshold", "PeakIndex" ]]
+						]
+					}	
+				},					
+				"PARAMS" : {
+					"NN_MODEL_TO_LOAD" : ["SS_20120814Hddn10Stps2000nNbChns5WnS-180WnE180DetectAwayFromNonHapsPeakIndexVSDetectNearestHapsPeakIndex"],
+					"PREDICT_INPUT_HIERARCHY" : [ [ "Detect", "MiddleOfWaves", "PeakIndex"] ],
+					"LABEL_HIERARCHIES" : [ [ "Detect", "AwayFrom", "NonHaps", "PeakIndex" ], [ "Detect", "Nearest", "Haps", "PeakIndex" ] ]
+				}
+			}
+		}
+	],
+
+	"PIPELINE_PROCESSING" : {
+
+		"ANALYSIS_SEQUENCE" : "ONE_BY_ONE",		  	
+		"KEEP_DATASET_IN_MEMORY_AFTER_PROCESSING" : false
+	},
+
+	"DEFAULT_OUTPUT_PARAMS_FOR_EACH_STEP" : 
+	{
+		"OUTPUT" : {
+			"SEPARATOR_CHAR" : null,
+			"PLOT_CHANS" : {
+				"PERFORM_PLOT_CHANS" : false,
+				"EVENT_MARKER_PARAMS" : {
+				
+					"PLOT_EVENTS" : true,
+					"WIDDEN_INDICES" : false,
+					"ONLY_PLOT_WINDOWS_WITH_EVENTS" : true,
+
+					"DEFAULT_MARKER_STYLING" : {
+						"linewidth" : 10
+					},
+					"MARKER_STYLING" :
+					{
+						"ANALYSIS" : { 
+							"BY" : null,
+							"VALUES" : null
+						},									
+						"EVENT_TYPE" : { 
+							"BY" : null,
+							"VALUES" : null
+						},
+						"EVENT_DIRECTION" :  { 
+							"BY" : "linestyles",
+							"VALUES" : ["solid", "solid"]
+						},
+						"UNIT" : {
+							"BY" : "color",
+							"VALUES" : [ "red", "green", "blue", "orange", "saddlebrown", "magenta", "red", "green", "blue", "orange", "saddlebrown", "magenta","red", "green", "blue", "orange", "saddlebrown", "magenta","red", "green", "blue", "orange", "saddlebrown", "magenta"]
+						}
+					}
+				},
+				"FIG_PARAMS" : {
+					"FIGURE_SIZE" : [],
+					"DPI" : 13,
+					"LINEWIDTH" : 12,
+					"LEGEND_FONT_SIZE" : 50,
+					"TITLE_FONT_SIZE" : 50,
+					"LEGEND_LINE_WIDTH" : 50,
+					"MAX_NUM_OF_CHANNELS_PER_WINDOW" : 500,
+					"MAX_LENGTH_OF_DATA_PER_WINDOW" : "00H30M00",
+					"CHANNELS_SUBSETS" : null
+				},
+				"IO_PARAMS" : {
+					"ADD_WINDOWS_AS_NEW_SUB_FOLDER" : false,
+					"ADD_CHANS_AS_NEW_SUB_FOLDER" : false,
+					"SUB_FOLDER" : "PLOT_CHANS",
+					"SAVE_PLOTS_IN_ORIGINAL_FOLDER" : true,
+					"ADD_STEP_AS_NEW_SUB_FOLDER" : false,						
+					"ADD_STEP_TO_FILENAME_SUFFIX" : true
+				},
+				"SAMPLES_SUBSETS" :[[null]]
+			},
+
+			"SAVE_DATA" : {
+				"PERFORM_SAVE_DATA" : true,
+				"PARAMS" : {
+					"SUB_FOLDER" : "",
+					"SAVE_INPUT_DATA" : true,
+					"ADD_STEP_AS_NEW_SUB_FOLDER" : false,	
+					"ADD_STEP_TO_FILENAME_SUFFIX" : true,
+					"ONLY_ON_FINAL_STEP" : true
+				}
+			},
+			"MATCH_EVENTS_WITH_REF_AFTER_EACH_STEP" : true,
+			"DEFAULT_REFERENCE_EVENTS_HIERARCHIES" : [["Manual","PeakIndex"]],			
+			"PRINT_DATA_HIEARCHY_AFTER_EACH_STEP" : true,
+			"CALC_SAMPLES_STATS" : false
+
+		}
+	},
+	"MISC_PARAMS_FILE" : "MiscParams.json"
+}
